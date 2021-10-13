@@ -37,6 +37,13 @@ def migrate():
     return f'{t1},{t2}'
 
 
+@app.route('/init/')
+def init():
+    cmd_run('podman rm -f $(podman ps -aq)', True)
+    cmd_run('rm -r /tmp/podman/test', True)
+    cmd_run('rm -r /tmp/podman/srvMig.tar.gz', True)
+    return 'done'
+
 
 if __name__ == '__main__':
     ck, _ = cmd_run('whoami', True)

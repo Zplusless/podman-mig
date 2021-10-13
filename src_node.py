@@ -65,11 +65,14 @@ def main():
 
     # t2 = time.time()
     # send_file(config.mount_dir, config.mount_dir, config.target_ip, True)
-    t3 = time.time()
+
+    t2 = time.time()
     ans = send_info(config.container_info, config.target_ip, 'container_info')
     print('send info:', ans)
-    t4 = time.time()
+    t3 = time.time()
+
     checkpoint()
+    t4 = time.time()
 
     #* test
     send_file(config.mount_dir, config.mount_dir, config.target_ip, True)
@@ -81,8 +84,20 @@ def main():
 
     
     ans = send_info({'info': 'done'}, config.target_ip, 'migrate')
-    print(ans)
+    # print(ans)
     t7 = time.time()
+    
+    tt = ans.split(',')
+    tt1 = int(ans[0])
+    tt2 = int(ans[1])
+
+    print(f'send info: {t3-t2}')
+    print(f'checkpoint: {t4-t3}')
+    print(f'send mount: {t5-t4}')
+    print(f'send chkpt: {t6-t5}')
+    # print(f'send done: {tt1-t6}')
+    print(f'restore: {tt2-tt1}')
+
     
 
 
@@ -92,9 +107,15 @@ if __name__ == '__main__':
     # if 'root' not in ck:
     #     raise Exception('please run with root')
 
+    # 清楚临时文件
     cmd_run(f"sudo rm {config.mount_dir}/test.avi ", True)
     
     #* 源节点和目标节点文件的权限mod也要完全一样
     cmd_run(f"sudo chmod 644 {config.mount_dir}/test.mp4 ", True) 
+    # 让chkpt文件可以发送
     cmd_run(f"sudo rm {config.chkpt_path}", True)
+
+    # target节点清楚临时文件
+    r.get(f'http://{config.target_ip}:8000/init/')
+
     main()
