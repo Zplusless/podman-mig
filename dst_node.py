@@ -8,7 +8,7 @@ from call_cmd import cmd_run
 
 INFO = {'info' : None}
 
-@app.route('container_info', methods=['POST'])
+@app.route('/container_info/', methods=['POST'])
 def recieve_data():
 
     INFO['info'] = dict(request.form)
@@ -22,8 +22,8 @@ def recieve_data():
 
 
 
-@app.route('migrate', methods=['POST'])
-def recieve_data():
+@app.route('/migrate/', methods=['POST'])
+def migrate():
     
     t1 = time.time()
     image = request.form.get('image')
