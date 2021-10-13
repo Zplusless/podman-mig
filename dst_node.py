@@ -27,8 +27,11 @@ def migrate():
     
     t1 = time.time()
     image = request.form.get('image')
- 
-    cmd_run(f"podman container restore -i {INFO['info']['chkpt_path']}", True)
+    
+    cmd = f"podman container restore -i {INFO['info']['chkpt_path']}"
+    print('CMD:  ', cmd)
+    ans, t = cmd_run(cmd, True)
+    print('RESTORE:  ', ans)
     t2 = time.time()
 
     return f'{t1},{t2}'

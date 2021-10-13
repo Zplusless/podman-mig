@@ -8,6 +8,8 @@ from typing import Dict
 import time
 
 
+CACHE={'id':None}
+
 def send_info(data:Dict, target:str, function:str):
     # 调用flask端口
     addr = f"http://{target}:8000/{function}/"
@@ -17,18 +19,41 @@ def send_info(data:Dict, target:str, function:str):
     
     raise Exception('target node error') 
 
-def send_file(path, target_ip, is_dir=False):
+def send_file(local_path,target_path, target_ip, is_dir=False):
     # sshpass -p 1423 scp -r ./test_scp/ edge@192.168.50.141:/home/edge
     dir_flag = '-r' if is_dir else ''
-    cmd = f'sshpass -p {config.target_pass} scp {dir_flag} {path} {config.target_user}@{target_ip}:path'
+    cmd = f'sshpass -p {config.target_pass} scp {dir_flag} {local_path} {config.target_user}@{target_ip}:{target_path}'
+    
+    print(f'\nCOMMAND:  {cmd}')
     ans, t = cmd_run(cmd, True)
+
+    print(f'\nSTDOUT:  {ans}')
     
     return ans, t
 
 def run_container():
     # podman run -d -v /home/edge/XXX:/tmp/podman docker.io/borda/docker_python-opencv-ffmpeg  ffmpeg -i /tmp/podman/test.mp4 /tmp/podman/test.avi
-    cmd = f"podman run -d -v {config.container_info['mount_dir']}:/tmp/podman --name test {config.container_info['image']} {config.container_info['init_cmd']}"
+    
+    
+    
+    cmd = f"sudo podman run -d -v {config.mount_dir}:/tmp/podman {config.container_info['image']} {config.container_info['init_cmd']}"
+    print(f'COMMAND:  {cmd}')
     ans, t = cmd_run(cmd, True)
+
+    CACHE['id'] = ans[:-1]
+
+    print(f'\nSTDOUT:  {ans}')
+
+    return ans,t
+
+def checkpoint():
+
+    cmd = f"sudo podman container checkpoint {CACHE['id']} -e {config.chkpt_path}"
+
+    print(f'COMMAND:  {cmd}')
+    ans, t = cmd_run(cmd, True)
+
+    print(f'\nSTDOUT:  {ans}')
 
     return ans,t
 
@@ -38,23 +63,38 @@ def main():
 
     time.sleep(config.time)
 
-    t2 = time.time()
-    send_file(config.container_info['mount_dir'], config.target_ip, True)
+    # t2 = time.time()
+    # send_file(config.mount_dir, config.mount_dir, config.target_ip, True)
     t3 = time.time()
-    send_info(config.container_info, config.target_ip, 'container_info')
+    ans = send_info(config.container_info, config.target_ip, 'container_info')
+    print('send info:', ans)
     t4 = time.time()
-    cmd_run(f'podman container checkpoint test -e {config.checkpoint_path}', True)
+    checkpoint()
+
+    #* test
+    send_file(config.mount_dir, config.mount_dir, config.target_ip, True)
+    
     t5 = time.time()
-    send_file(config.checkpoint_path, config.target_ip, is_dir=False)
+    cmd_run(f"sudo chmod 666 {config.chkpt_path}", True)
+    send_file(config.chkpt_path, config.chkpt_path, config.target_ip, is_dir=False)
     t6 = time.time()
+
+    
     ans = send_info({'info': 'done'}, config.target_ip, 'migrate')
+    print(ans)
     t7 = time.time()
     
 
 
 if __name__ == '__main__':
-    ck, _ = cmd_run('whoami', True)
-    # print(ck, type(ck))
-    if 'root' not in ck:
-        raise Exception('please run with root')
+    # ck, _ = cmd_run('whoami', True)
+    # # print(ck, type(ck))
+    # if 'root' not in ck:
+    #     raise Exception('please run with root')
+
+    cmd_run(f"sudo rm {config.mount_dir}/test.avi ", True)
+    
+    #* 源节点和目标节点文件的权限mod也要完全一样
+    cmd_run(f"sudo chmod 644 {config.mount_dir}/test.mp4 ", True) 
+    cmd_run(f"sudo rm {config.chkpt_path}", True)
     main()
