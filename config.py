@@ -9,7 +9,7 @@ podman_dir = '/tmp/podman/'
 chkpt_path = podman_dir+'srvMig.tar.gz'
 mount_dir = podman_dir+'test'
 
-csv_path = f"/tmp/csv_data/data{int(time.time())}.csv"
+csv_path = f"/tmp/csv_data/time_stamps.csv"
 
 
 # 只用修改这里
