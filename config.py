@@ -3,7 +3,7 @@ import time
 wait_time= 5         # 运行几秒开始迁移
 target_ip= '192.168.50.141' #'10.112.149.97',
 target_user= 'edge'
-target_pass= '****'
+target_pass= '1423'
 
 podman_dir = '/tmp/podman/'
 chkpt_path = podman_dir+'srvMig.tar.gz'

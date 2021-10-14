@@ -108,7 +108,7 @@ def main():
     mig_data.append(['send info', t3-t2, milisecond(t2)])
     mig_data.append(['checkpoint', t4-t3, milisecond(t3)])
     mig_data.append(['send mount', t5-t4, milisecond(t4)])
-    mig_data.append(['send chkpt', t6-t5, milisecond(t4)])
+    # mig_data.append(['send chkpt', t6-t5, milisecond(t4)])
     # ['send done', tt1-t6]
     mig_data.append(['restore', tt2-tt1, milisecond(tt1)])
 
