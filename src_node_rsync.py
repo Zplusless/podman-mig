@@ -100,8 +100,8 @@ def main():
 
 
     tt = ans.split(',')
-    tt1 = float(ans[0])
-    tt2 = float(ans[1])
+    tt1 = float(tt[0])
+    tt2 = float(tt[1])
 
     mig_data = [["item", "d_t", "time"]]
     
