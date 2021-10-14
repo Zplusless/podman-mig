@@ -88,7 +88,7 @@ def main():
     t5 = time.time()
     # cmd_run(f"sudo chmod 666 {config.chkpt_path}", True)
     # send_file(config.chkpt_path, config.chkpt_path, config.target_ip, is_dir=False)
-    t6 = time.time()
+    # t6 = time.time()
 
     
     ans = send_info({'info': 'done'}, config.target_ip, 'migrate')
@@ -104,13 +104,16 @@ def main():
     tt2 = float(ans[1])
 
     mig_data = [["item", "d_t", "time"]]
-
-    mig_data.append(['send info', t3-t2, milisecond(t2)])
+    
+    mig_data.append(['send basic data', t2-t2_, milisecond(t2)])
+    mig_data.append(['send image name', t3-t2, milisecond(t2)])
     mig_data.append(['checkpoint', t4-t3, milisecond(t3)])
     mig_data.append(['send mount', t5-t4, milisecond(t4)])
     # mig_data.append(['send chkpt', t6-t5, milisecond(t4)])
     # ['send done', tt1-t6]
     mig_data.append(['restore', tt2-tt1, milisecond(tt1)])
+
+    mig_data.append(['total', t7-t2_, milisecond(t2_)])
 
     pprint(mig_data)
 
