@@ -105,15 +105,15 @@ def main():
 
     mig_data = [["item", "d_t", "time"]]
     
-    mig_data.append(['send basic data', t2-t2_, milisecond(t2)])
+    mig_data.append(['send basic data', t2-t2_, milisecond(t2_)])
     mig_data.append(['send image name', t3-t2, milisecond(t2)])
     mig_data.append(['checkpoint', t4-t3, milisecond(t3)])
-    mig_data.append(['send mount', t5-t4, milisecond(t4)])
+    mig_data.append(['send chkpt data', t5-t4, milisecond(t4), milisecond(t5)])
     # mig_data.append(['send chkpt', t6-t5, milisecond(t4)])
     # ['send done', tt1-t6]
-    mig_data.append(['restore', tt2-tt1, milisecond(tt1)])
+    mig_data.append(['restore', tt2-tt1, milisecond(tt1), milisecond(tt2)])
 
-    mig_data.append(['total', t7-t2_, milisecond(t2_)])
+    mig_data.append(['total', t7-t2_, milisecond(t7)])
 
     pprint(mig_data)
 
