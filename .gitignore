@@ -1,2 +1,5 @@
 __pycache__/
 *.cpython-36.pyc
+cmd.pid
+cpu_test.csv
+nohup.out

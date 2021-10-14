@@ -26,7 +26,7 @@ def recieve_data():
 def migrate():
     
     t1 = time.time()
-    image = request.form.get('image')
+    # image = request.form.get('image')
     
     cmd = f"podman container restore -i {INFO['info']['chkpt_path']}"
     print('CMD:  ', cmd)

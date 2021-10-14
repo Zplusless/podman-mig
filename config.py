@@ -1,6 +1,6 @@
+import time
 
-
-time= 5         # 运行几秒开始迁移
+wait_time= 5         # 运行几秒开始迁移
 target_ip= '192.168.50.141' #'10.112.149.97',
 target_user= 'edge'
 target_pass= '****'
@@ -9,6 +9,7 @@ podman_dir = '/tmp/podman/'
 chkpt_path = podman_dir+'srvMig.tar.gz'
 mount_dir = podman_dir+'test'
 
+csv_path = f"/tmp/csv_data/data{int(time.time())}.csv"
 
 
 container_info = {

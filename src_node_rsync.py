@@ -5,7 +5,9 @@ from call_cmd import cmd_run
 
 import requests as r
 from typing import Dict
-import time
+import time, datetime
+from pprint import pprint
+import csv
 
 
 CACHE={'id':None}
@@ -57,11 +59,16 @@ def checkpoint():
 
     return ans,t
 
+
+def milisecond(t):
+    return datetime.datetime.fromtimestamp(t).strftime("%H:%M:%S.%f")
+
+
 def main():
     t1 = time.time()
     run_container()
 
-    time.sleep(config.time)
+    time.sleep(config.wait_time)
 
     t2_ = time.time()
     send_file(config.podman_dir, config.podman_dir, config.target_ip, True)
@@ -88,18 +95,28 @@ def main():
     # print(ans)
     t7 = time.time()
     
+    # 等待一会
+    time.sleep(3)
+
+
     tt = ans.split(',')
-    tt1 = int(ans[0])
-    tt2 = int(ans[1])
+    tt1 = float(ans[0])
+    tt2 = float(ans[1])
 
-    print(f'pre sync: {t2-t2_}')
-    print(f'send info: {t3-t2}')
-    print(f'checkpoint: {t4-t3}')
-    print(f'send mount: {t5-t4}')
-    print(f'send chkpt: {t6-t5}')
-    # print(f'send done: {tt1-t6}')
-    print(f'restore: {tt2-tt1}')
+    mig_data = [["item", "d_t", "time"]]
 
+    mig_data.append(['send info', t3-t2, milisecond(t2)])
+    mig_data.append(['checkpoint', t4-t3, milisecond(t3)])
+    mig_data.append(['send mount', t5-t4, milisecond(t4)])
+    mig_data.append(['send chkpt', t6-t5, milisecond(t4)])
+    # ['send done', tt1-t6]
+    mig_data.append(['restore', tt2-tt1, milisecond(tt1)])
+
+    pprint(mig_data)
+
+    with open(config.csv_path, 'w') as f:
+        wtr = csv.writer(f)
+        wtr.writerows(mig_data)
     
 
 
@@ -109,7 +126,7 @@ if __name__ == '__main__':
     # if 'root' not in ck:
     #     raise Exception('please run with root')
 
-    # 清楚临时文件
+    #  清除临时文件
     cmd_run(f"sudo rm {config.mount_dir}/test.avi ", True)
     
     #* 源节点和目标节点文件的权限mod也要完全一样
@@ -117,7 +134,10 @@ if __name__ == '__main__':
     # 让chkpt文件可以发送
     cmd_run(f"sudo rm {config.chkpt_path}", True)
 
-    # target节点清楚临时文件
+    # target节点 清除临时文件
     r.get(f'http://{config.target_ip}:8000/init/')
 
+
     main()
+
+
