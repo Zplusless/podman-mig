@@ -12,6 +12,8 @@ mount_dir = podman_dir+'test'
 csv_path = f"/tmp/csv_data/time_stamps.csv"
 
 
+mount_volume = True  # 是否挂载本地目录
+
 # 只用修改这里
 container_info = {
     # "info":'info',
