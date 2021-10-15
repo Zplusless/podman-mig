@@ -71,7 +71,7 @@ def main():
     time.sleep(config.wait_time)
 
     t2_ = time.time()
-    send_file(config.podman_dir, config.podman_dir, config.target_ip, True)
+    data_size1, dt1 = send_file(config.podman_dir, config.podman_dir, config.target_ip, True)
 
     t2 = time.time()
     ans = send_info(config.container_info, config.target_ip, 'container_info')
@@ -83,7 +83,7 @@ def main():
 
     #* test
     cmd_run(f"sudo chmod 666 {config.chkpt_path}", True)
-    send_file(config.podman_dir, config.podman_dir, config.target_ip, True)
+    data_size2, dt2 = send_file(config.podman_dir, config.podman_dir, config.target_ip, True)
     
     t5 = time.time()
     # cmd_run(f"sudo chmod 666 {config.chkpt_path}", True)
@@ -114,6 +114,12 @@ def main():
     mig_data.append(['restore', tt2-tt1, milisecond(tt1), milisecond(tt2)])
 
     mig_data.append(['total', t7-t2_, milisecond(t7)])
+
+    mig_data.append([])
+    mig_data.append([])
+
+    mig_data.append(['pre data transfer:', data_size1, dt1])
+    mig_data.append(['chkpt data transfer:', data_size2, dt2])
 
     pprint(mig_data)
 
