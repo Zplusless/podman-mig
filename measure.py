@@ -9,6 +9,6 @@ def milisecond(t):
 # data = ['cpu', 'mem', 'time']
 
 while True:
-    print(psutil.cpu_percent(0), psutil.virtual_memory().percent, milisecond(time.time()))
+    print(f"{psutil.cpu_percent(0)},{psutil.virtual_memory().percent},{milisecond(time.time())}")
     time.sleep(0.5)
 
