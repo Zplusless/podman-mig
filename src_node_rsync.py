@@ -36,9 +36,9 @@ def send_file(local_path,target_path, target_ip, is_dir=True):
 def run_container():
     # podman run -d -v /home/edge/XXX:/tmp/podman docker.io/borda/docker_python-opencv-ffmpeg  ffmpeg -i /tmp/podman/test.mp4 /tmp/podman/test.avi
     
+    volume = f'-v {config.mount_dir}:/tmp/podman' if config.mount_volume else ''
     
-    
-    cmd = f"sudo podman run -d -v {config.mount_dir}:/tmp/podman {config.container_info['image']} {config.container_info['init_cmd']}"
+    cmd = f"sudo podman run -d {volume} {config.container_info['image']} {config.container_info['init_cmd']}"
     print(f'COMMAND:  {cmd}')
     ans, t = cmd_run(cmd, True)
 
