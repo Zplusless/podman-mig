@@ -26,36 +26,36 @@ def send_file(local_path,target_path, target_ip, is_dir=True):
     dir_flag = '-r' if is_dir else ''
     cmd = f'sshpass -p {config.target_pass} rsync {dir_flag} -av {local_path} {config.target_user}@{target_ip}:{target_path}'
     
-    print(f'\nCOMMAND:  {cmd}')
+    # print(f'\nCOMMAND:  {cmd}')
     ans, t = cmd_run(cmd, True)
 
-    print(f'\nSTDOUT:  {ans}')
+    # print(f'\nSTDOUT:  {ans}')
     
     return ans, t
 
 def run_container():
     # podman run -d -v /home/edge/XXX:/tmp/podman docker.io/borda/docker_python-opencv-ffmpeg  ffmpeg -i /tmp/podman/test.mp4 /tmp/podman/test.avi
     
-    volume = f'-v {config.mount_dir}:/tmp/podman' if config.mount_volume else ''
+    volume = f'-v {config.mount_dir}:/tmp/podman/' if config.mount_volume else ''
     
     cmd = f"sudo podman run -d {volume} {config.container_info['image']} {config.container_info['init_cmd']}"
-    print(f'COMMAND:  {cmd}')
+    # print(f'COMMAND:  {cmd}')
     ans, t = cmd_run(cmd, True)
 
     CACHE['id'] = ans[:-1]
 
-    print(f'\nSTDOUT:  {ans}')
+    # print(f'\nSTDOUT:  {ans}')
 
     return ans,t
 
-def checkpoint():
+def checkpoint(i):
 
     cmd = f"sudo podman container checkpoint {CACHE['id']} -e {config.chkpt_path}"
 
-    print(f'COMMAND:  {cmd}')
+    # print(f'COMMAND:  {cmd}')
     ans, t = cmd_run(cmd, True)
 
-    print(f'\nSTDOUT:  {ans}')
+    # print(f'\nSTDOUT:  {ans}')
 
     return ans,t
 
@@ -64,21 +64,21 @@ def milisecond(t):
     return datetime.datetime.fromtimestamp(t).strftime("%H:%M:%S.%f")
 
 
-def main():
+def main(i):
     t1 = time.time()
     run_container()
 
     time.sleep(config.wait_time)
 
     t2_ = time.time()
-    data_size1, dt1 = send_file(config.podman_dir, config.podman_dir, config.target_ip, True)
+    data_size1, dt1 = send_file(config.mount_src_dir, config.mount_src_dir, config.target_ip, True)
 
     t2 = time.time()
     ans = send_info(config.container_info, config.target_ip, 'container_info')
     print('send info:', ans)
     t3 = time.time()
 
-    checkpoint()
+    checkpoint(i)
     t4 = time.time()
 
     #* test
@@ -123,7 +123,7 @@ def main():
 
     pprint(mig_data)
 
-    with open(config.csv_path, 'w') as f:
+    with open(config.csv_path.format(i), 'w') as f:
         wtr = csv.writer(f)
         wtr.writerows(mig_data)
     
@@ -135,18 +135,48 @@ if __name__ == '__main__':
     # if 'root' not in ck:
     #     raise Exception('please run with root')
 
-    #  清除临时文件
-    cmd_run(f"sudo rm {config.mount_dir}/test.avi ", True)
-    
-    #* 源节点和目标节点文件的权限mod也要完全一样
-    cmd_run(f"sudo chmod 644 {config.mount_dir}/test.mp4 ", True) 
-    # 让chkpt文件可以发送
-    cmd_run(f"sudo rm {config.chkpt_path}", True)
 
-    # target节点 清除临时文件
-    r.get(f'http://{config.target_ip}:8000/init/')
+    for i in range(1,6):
+      #  清除临时文件
+        # cmd_run(f"sudo rm -rf {config.mount_dir}"+"!(src)", True)  # 删除挂载目录下非src路径下的文件
+        # cmd_run(f"sudo rm -rf {config.podman_dir}"+"!(test)", True) # 删除podman路径下非挂载路径的文件
+        
+        # cmd_run(f'll {config.mount_dir}', True)
+        # cmd_run(f'll {config.podman_dir}', True)
+
+        # print('delete intermediate files')
+        # time.sleep(10)
 
 
-    main()
+        #* 源节点和目标节点文件的权限mod也要完全一样
+        cmd_run(f"sudo chmod 644 {config.mount_dir}"+"src/1015.mp4 ", True) 
+        
+        # 让chkpt文件可以发送
+        cmd_run(f"sudo rm {config.chkpt_path}", True)
+        cmd_run(f"sudo rm {config.mount_dir}"+"1015.mp4", True)
+        cmd_run(f'sudo rm {config.mount_dir}'+'examples.tar.bz2', True)
+        print('delete intermediate files')
+        time.sleep(3)
 
+
+        # target节点 清除临时文件
+        r.get(f'http://{config.target_ip}:8000/init/')
+
+        # 启动本地measure程序
+        r.get(f'http://127.0.0.1:8000/start/{i}/')
+        r.get(f'http://{config.target_ip}:8000/start/{i}/')
+
+        main(i)
+
+        time.sleep(3)
+
+        r.get(f'http://127.0.0.1:8000/end/')
+        r.get(f'http://{config.target_ip}:8000/end/')
+
+        time.sleep(3)
+        mv_srvMig = f'srvMig_{i}.tar.gz'
+        cmd_run(f"sudo cp {config.chkpt_path} {config.csv_dir+mv_srvMig}", False)
+
+        time.sleep(3)
+                        
 
