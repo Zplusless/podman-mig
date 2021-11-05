@@ -136,7 +136,7 @@ if __name__ == '__main__':
     #     raise Exception('please run with root')
 
 
-    for i in range(1,6):
+    for i in range(1,9):
       #  清除临时文件
         # cmd_run(f"sudo rm -rf {config.mount_dir}"+"!(src)", True)  # 删除挂载目录下非src路径下的文件
         # cmd_run(f"sudo rm -rf {config.podman_dir}"+"!(test)", True) # 删除podman路径下非挂载路径的文件
@@ -168,12 +168,12 @@ if __name__ == '__main__':
 
         main(i)
 
-        time.sleep(3)
+        time.sleep(6)
 
         r.get(f'http://127.0.0.1:8000/end/')
         r.get(f'http://{config.target_ip}:8000/end/')
 
-        time.sleep(3)
+        time.sleep(10)
         mv_srvMig = f'srvMig_{i}.tar.gz'
         cmd_run(f"sudo cp {config.chkpt_path} {config.csv_dir+mv_srvMig}", False)
 

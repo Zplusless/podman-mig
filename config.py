@@ -2,7 +2,7 @@ import time
 
 #************************************
 #? ************必修改*****************
-test = 'mem'  # cpu, ip, mem, tar, video
+test = 'mem'  # cpu, io, mem, tar, video
 #************************************
 
 
@@ -22,7 +22,7 @@ csv_dir = "/tmp/csv_data/"
 csv_path = csv_dir+"time_stamps_{}.csv"
 
 
-mount_volume = True  # 是否挂载本地目录
+mount_volume = True if test in ['tar', 'video'] else False  # 是否挂载本地目录
 
 
 test_cmds = {
