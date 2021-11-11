@@ -12,3 +12,6 @@ sudo podman pull platpus/javafx
 sudo podman pull zzdflyz351/snake-edge
 # cd snake_build_image
 # sudo bash ./build.sh
+
+# 拉取GA
+sudo podman pull parkhi/gaminganywhere:16.04

@@ -81,9 +81,9 @@ ga_cmd = 'sudo xhost +local:root && sudo podman run -it --rm --ipc=host --env="D
 
 game_base_cmd = 'xhost +local:root && podman run -it --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v /tmp/podman/test:/tmp/podman '
 
-snake_cmd = 'snake-edge python /tmp/podman/src/Snakepygame.py -n snake -i 10.112.145.90 -p 5500'
+snake_cmd = 'docker.io/zzdflyz351/snake-edge python /tmp/podman/src/Snakepygame.py -n snake -i 10.112.145.90 -p 5500'
 
-minecraft_cmd = 'platpus/javafx java -jar /tmp/podman/src/HMCL-3.3.188.jar'
+minecraft_cmd = 'docker.io/platpus/javafx java -jar /tmp/podman/src/HMCL-3.3.188.jar'
 
 if game == 'snake':
     game_cmd = game_base_cmd+snake_cmd
