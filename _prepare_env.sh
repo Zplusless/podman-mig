@@ -1,6 +1,8 @@
 mkdir /tmp/podman
 mkdir /tmp/podman/test
 mkdir /tmp/podman/test/src
+mkdir /tmp/csv_data/
+
 cp ./game_files/* /tmp/podman/test/src
 
 # 拉取minecraft的容器
