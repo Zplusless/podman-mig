@@ -36,26 +36,51 @@ def send_file(local_path,target_path, target_ip, is_dir=True):
 def run_container():
     # podman run -d -v /home/edge/XXX:/tmp/podman docker.io/borda/docker_python-opencv-ffmpeg  ffmpeg -i /tmp/podman/test.mp4 /tmp/podman/test.avi
     
-    volume = f'-v {config.mount_dir}:/tmp/podman/' if config.mount_volume else ''
-    
-    cmd = f"sudo podman run -d {volume} {config.container_info['image']} {config.container_info['init_cmd']}"
-    # print(f'COMMAND:  {cmd}')
-    ans, t = cmd_run(cmd, True)
+    if config.is_test:
+        volume = f'-v {config.mount_dir}:/tmp/podman/' if config.mount_volume else ''
+        
+        cmd = f"sudo podman run -d {volume} {config.container_info['image']} {config.container_info['init_cmd']}"
+        # print(f'COMMAND:  {cmd}')
+        ans, t = cmd_run(cmd, True)
 
-    CACHE['id'] = ans[:-1]
+        CACHE['id'] = ans[:-1]
 
-    # print(f'\nSTDOUT:  {ans}')
+        # print(f'\nSTDOUT:  {ans}')
+    else:
+        # 启动GA
+        
+        ans, t = cmd_run(config.ga_cmd, True)
+        ga_id = ans[:-1]
+
+        ans, t = cmd_run(config.game_cmd, True)
+        game_id = ans[:-1]
+
+        CACHE['id'] = ga_id, game_id
 
     return ans,t
 
 def checkpoint(i):
 
-    cmd = f"sudo podman container checkpoint {CACHE['id']} -e {config.chkpt_path}"
+    if config.is_test:
 
-    # print(f'COMMAND:  {cmd}')
-    ans, t = cmd_run(cmd, True)
+        cmd = f"sudo podman container checkpoint {CACHE['id']} -e {config.chkpt_path}"
 
-    # print(f'\nSTDOUT:  {ans}')
+        # print(f'COMMAND:  {cmd}')
+        ans, t = cmd_run(cmd, True)
+
+        # print(f'\nSTDOUT:  {ans}')
+    else:
+        ga_id, game_id = CACHE['id']
+
+        # 先chkpt GA
+        cmd = f"sudo podman container checkpoint {ga_id} -e {config.ga_chkpt_path}"
+        # print(f'COMMAND:  {cmd}')
+        ans, t = cmd_run(cmd, True)
+
+        # 再chkpt 游戏
+        cmd = f"sudo podman container checkpoint {game_id} -e {config.game_chkpt_path}"
+        # print(f'COMMAND:  {cmd}')
+        ans, t = cmd_run(cmd, True)
 
     return ans,t
 

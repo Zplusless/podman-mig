@@ -8,6 +8,8 @@ app = Flask(__name__)
 from call_cmd import cmd_run
 from measure import Measure
 
+import config
+
 
 data = {'data': Measure()}
 INFO = {'info' : None}
@@ -15,12 +17,17 @@ INFO = {'info' : None}
 @app.route('/container_info/', methods=['POST'])
 def recieve_data():
 
-    INFO['info'] = dict(request.form)
 
-    image = request.form.get('image')
- 
-    cmd_run(f'podman pull {image}', True)
+    #todo 此处暂时使用配置文件，后续应该改成传输数据
+    if config.is_test:
+        INFO['info'] = dict(request.form)
 
+        image = request.form.get('image')
+    
+        cmd_run(f'podman pull {image}', True)
+
+    else:
+        cmd_run(f'podman pull platpus/javafx', True)
 
     return 'done'
 
@@ -31,11 +38,18 @@ def migrate():
     
     t1 = time.time()
     # image = request.form.get('image')
-    
-    cmd = f"podman container restore -i {INFO['info']['chkpt_path']}"
-    print('CMD:  ', cmd)
-    ans, t = cmd_run(cmd, True)
-    print('RESTORE:  ', ans)
+    if config.is_test:
+        cmd = f"podman container restore -i {INFO['info']['chkpt_path']}"
+        print('CMD:  ', cmd)
+        ans, t = cmd_run(cmd, True)
+        print('RESTORE:  ', ans)
+    else:
+        cmd = f"podman container restore -i {config.game_chkpt_path}"
+        ans, t = cmd_run(cmd, True)
+
+        cmd = f"podman container restore -i {config.ga_chkpt_path}"
+        ans, t = cmd_run(cmd, True)
+
     t2 = time.time()
 
     return f'{t1},{t2}'
@@ -45,7 +59,7 @@ def migrate():
 def init():
     cmd_run('podman rm -f $(podman ps -aq)', True)
     cmd_run('rm -r /tmp/podman/test/*', False)
-    cmd_run('rm -r /tmp/podman/srvMig.tar.gz', True)
+    cmd_run('rm -r /tmp/podman/*.tar.gz', True)
     return 'done'
 
 
