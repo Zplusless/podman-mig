@@ -7,5 +7,6 @@ cp ./game_files/* /tmp/podman/test/src
 sudo podman pull platpus/javafx
 
 # build snake的容器
-cd snake_build_image
-sudo bash ./build.sh
+sudo podman pull zzdflyz351/snake-edge
+# cd snake_build_image
+# sudo bash ./build.sh
