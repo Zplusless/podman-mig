@@ -36,9 +36,9 @@ def send_file(local_path,target_path, target_ip, is_dir=True):
 def run_container():
     # podman run -d -v /home/edge/XXX:/tmp/podman docker.io/borda/docker_python-opencv-ffmpeg  ffmpeg -i /tmp/podman/test.mp4 /tmp/podman/test.avi
     
-    volume = f'-v {config.mount_dir}:/tmp/podman/' if config.mount_volume else ''
-    
-    cmd = f"sudo podman run -d {volume} {config.container_info['image']} {config.container_info['init_cmd']}"
+    game_base_cmd = 'sudo xhost +local:root && sudo podman run -d --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v /tmp/podman/test:/tmp/podman '
+   
+    cmd = game_base_cmd + f" {config.container_info['image']} {config.container_info['init_cmd']}"
     # print(f'COMMAND:  {cmd}')
     ans, t = cmd_run(cmd, True)
 
@@ -74,6 +74,11 @@ def main(i):
 
 
     #! =========  通知用户连接 ==========
+    r.post(f'http://{config.user_ip}:8000/connect/', data={'ip':config.src_ip})
+
+    if config.test == 'minecraft':
+        print("请手动开始minecraft游戏")
+        time.sleep(20)
 
 
     #* =========  发送原始文件 ==========
@@ -108,7 +113,7 @@ def main(i):
 
 
     #! =========  通知用户重连 ==========
-    
+    r.post(f'http://{config.user_ip}:8000/connect/', data={'ip':config.dst_ip})
     # 等待一会
     time.sleep(3)
 
@@ -195,6 +200,10 @@ if __name__ == '__main__':
         main(i)
 
         time.sleep(6)
+
+        # 断开user
+        r.get(f'http://{config.user_ip}:8000/end/')
+
 
         r.get(f'http://127.0.0.1:8000/end/')
         r.get(f'http://{config.target_ip}:8000/end/')

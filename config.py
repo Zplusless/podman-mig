@@ -10,6 +10,7 @@ test = 'mem'  # cpu, io, mem, tar, video, snake, minecraft
 
 src_ip = '10.112.150.12'
 dst_ip = '10.112.149.97'
+user_ip = '10.112.147.71'
 
 
 wait_time= 5         # 运行几秒开始迁移
@@ -50,7 +51,14 @@ test_cmds = {
     'video':{
         'image':'docker.io/borda/docker_python-opencv-ffmpeg:cpu-py3.8-cv4.5.1',
         'init_cmd': 'ffmpeg -i /tmp/podman/src/1015.flv /tmp/podman/1015.mp4'
-        
+    },
+    'snake':{
+        'image':'docker.io/zzdflyz351/snake-edge',
+        'init_cmd': '\"python /tmp/podman/src/Snakepygame.py -n snake -i 10.112.145.90 -p 5500\"'
+    },
+    'minecraft':{
+        'image':'docker.io/platpus/javafx',
+        'init_cmd': 'java -jar /tmp/podman/src/HMCL-3.3.188.jar'
     }
 }
 
