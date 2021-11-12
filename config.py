@@ -1,16 +1,21 @@
 import time
 
+is_test = False
+
 #************************************
 #? ************必修改*****************
-test = 'mem'  # cpu, io, mem, tar, video
+test = 'mem'  # cpu, io, mem, tar, video, snake, minecraft
 #************************************
 
+
+src_ip = '10.112.150.12'
+dst_ip = '10.112.149.97'
 
 
 wait_time= 5         # 运行几秒开始迁移
-target_ip= '192.168.50.141' #'10.112.149.97',
+target_ip= dst_ip
 target_user= 'edge'
-target_pass= '****'
+target_pass= '123456'
 
 podman_dir = '/tmp/podman/'
 chkpt_path = podman_dir+'srvMig.tar.gz'

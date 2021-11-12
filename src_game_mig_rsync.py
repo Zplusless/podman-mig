@@ -65,11 +65,18 @@ def milisecond(t):
 
 
 def main(i):
+
+    #* =========  启动容器 ==========
     t1 = time.time()
     run_container()
 
     time.sleep(config.wait_time)
 
+
+    #! =========  通知用户连接 ==========
+
+
+    #* =========  发送原始文件 ==========
     t2_ = time.time()
     data_size1, dt1 = send_file(config.mount_src_dir, config.mount_src_dir, config.target_ip, True)
 
@@ -78,10 +85,14 @@ def main(i):
     print('send info:', ans)
     t3 = time.time()
 
+
+    #* =========  checkpoint ==========
     checkpoint(i)
     t4 = time.time()
 
-    #* test
+
+
+    #* =========  发送checkpoint ==========
     cmd_run(f"sudo chmod 666 {config.chkpt_path}", True)
     data_size2, dt2 = send_file(config.podman_dir, config.podman_dir, config.target_ip, True)
     
@@ -90,15 +101,20 @@ def main(i):
     # send_file(config.chkpt_path, config.chkpt_path, config.target_ip, is_dir=False)
     # t6 = time.time()
 
-    
+    #* =========  通知dst启动 ==========
     ans = send_info({'info': 'done'}, config.target_ip, 'migrate')
     # print(ans)
     t7 = time.time()
+
+
+    #! =========  通知用户重连 ==========
     
     # 等待一会
     time.sleep(3)
 
 
+
+    #* =========  记录数据 ==========
     tt = ans.split(',')
     tt1 = float(tt[0])
     tt2 = float(tt[1])
@@ -134,10 +150,17 @@ if __name__ == '__main__':
     # # print(ck, type(ck))
     # if 'root' not in ck:
     #     raise Exception('please run with root')
-    if config.is_test:
-        print('This script is used to test [minecraft snake]')
+    if config.is_test or config.test not in ['snake', 'minecraft']:
+        print(f'This script is used to test [minecraft, snake], but config.test={config.test}')
         print('exit')
         exit(0)
+
+
+    #! 启动本地GA
+    #nohup bash measure.sh & echo $! > cmd.pid
+    cmd_run(f'bash scripts/run_ga.sh', False)
+    print('ga started')
+    time.sleep(3)
 
     for i in range(1,9):
       #  清除临时文件
@@ -169,8 +192,6 @@ if __name__ == '__main__':
         r.get(f'http://{config.target_ip}:8000/start/{i}/')
 
 
-        #! 启动本地GA
-
         main(i)
 
         time.sleep(6)
@@ -183,5 +204,7 @@ if __name__ == '__main__':
         cmd_run(f"sudo cp {config.chkpt_path} {config.csv_dir+mv_srvMig}", False)
 
         time.sleep(3)
+
+        
                         
 

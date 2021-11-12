@@ -81,4 +81,11 @@ if __name__ == '__main__':
     if 'root' not in ck:
         raise Exception('please run with root')
     
+
+    #! 启动本地GA
+    #nohup bash measure.sh & echo $! > cmd.pid
+    cmd_run(f'bash scripts/run_ga.sh', False)
+    print('ga started')
+    time.sleep(3)
+    
     app.run('0.0.0.0', port=8000)

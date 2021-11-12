@@ -134,7 +134,7 @@ if __name__ == '__main__':
     # # print(ck, type(ck))
     # if 'root' not in ck:
     #     raise Exception('please run with root')
-    if not config.is_test:
+    if not config.is_test or config.test not in ['cpu', 'io', 'mem', 'tar', 'video']:
         print('This script is used to test [cpu, ip, mem, tar, video]')
         print('exit')
         exit(0)
