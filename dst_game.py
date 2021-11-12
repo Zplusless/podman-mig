@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
     #! 启动本地GA
     #nohup bash measure.sh & echo $! > cmd.pid
-    cmd_run(f'bash scripts/run_ga.sh', False)
+    cmd_run(f'bash scripts/run_ga_server.sh', False)
     print('ga started')
     time.sleep(3)
     
