@@ -134,7 +134,10 @@ if __name__ == '__main__':
     # # print(ck, type(ck))
     # if 'root' not in ck:
     #     raise Exception('please run with root')
-
+    if not config.is_test:
+        print('This script is used to test [cpu, ip, mem, tar, video]')
+        print('exit')
+        exit(0)
 
     for i in range(1,9):
       #  清除临时文件
