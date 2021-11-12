@@ -22,18 +22,18 @@ done = False
 
 # log
 import time
-import logging
+# import logging
 import socket
 hostname = socket.gethostname()
 current_milli_time = lambda: time.time() * 1000  #lambda: int(round(time.time() * 1000))
 
-logging.basicConfig(
-    level=logging.INFO, 
-    format= f'%(asctime)s - {hostname} - %(levelname)s - %(message)s', #'%(asctime)s - %(levelname)s - %(message)s',
-    filename='node_log/srvMig.log',
-    filemode='a',##模式，有w和a，w就是写模式，每次都会重新写日志，覆盖之前的日志
-    )
-log = logging.getLogger('snake_log')
+# logging.basicConfig(
+#     level=logging.INFO, 
+#     format= f'%(asctime)s - {hostname} - %(levelname)s - %(message)s', #'%(asctime)s - %(levelname)s - %(message)s',
+#     filename='node_log/srvMig.log',
+#     filemode='a',##模式，有w和a，w就是写模式，每次都会重新写日志，覆盖之前的日志
+#     )
+# log = logging.getLogger('snake_log')
 
 
 
@@ -284,7 +284,7 @@ class SnakeClient(object):
                             print(f'\n\n\n\nreceived p_joined---> record_time_flag={self.record_time}')
                             if self.record_time:
                                 self.t2 = current_milli_time()
-                                log.info(self.t2-self.t1)
+                                # log.info(self.t2-self.t1)
                                 self.record_time = False
                                 print(f'logging at {self.t2}, record_time_flag--->{self.record_time}\n\n\n\n\n')
                     elif cmd == "p_gameover":
@@ -397,7 +397,7 @@ class SnakeClient(object):
 
 if __name__ == '__main__':
 
-    log.warning('\n\n========new experiment==========\n\n')
+    # log.warning('\n\n========new experiment==========\n\n')
 
     parser = argparse.ArgumentParser(description='user name, ip, port')
     

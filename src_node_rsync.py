@@ -185,6 +185,7 @@ if __name__ == '__main__':
 
 
         # target节点 清除临时文件
+        print('REQUEST:  ', f'http://{config.target_ip}:8000/init/')
         r.get(f'http://{config.target_ip}:8000/init/')
 
         # 启动本地measure程序
@@ -199,8 +200,12 @@ if __name__ == '__main__':
         r.get(f'http://{config.target_ip}:8000/end/')
 
         time.sleep(10)
-        mv_srvMig = f'srvMig_{i}.tar.gz'
-        cmd_run(f"sudo cp {config.chkpt_path} {config.csv_dir+mv_srvMig}", False)
+        if config.is_test:
+            mv_srvMig = f'srvMig_{i}.tar.gz'
+            cmd_run(f"sudo cp {config.chkpt_path} {config.csv_dir+mv_srvMig}", False)
+        else:
+            ga_mv = f'GA_{i}.tar.gz'
+            game_mv = f'game_{i}.tar.gz'
 
         time.sleep(3)
                         

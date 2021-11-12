@@ -7,12 +7,12 @@ test = 'mem'  # cpu, io, mem, tar, video
 #************************************
 
 
-# ====================is_test = True=================================
+
 
 wait_time= 5         # 运行几秒开始迁移
-target_ip= '192.168.50.141' #'10.112.149.97',
+target_ip= '10.112.149.97'
 target_user= 'edge'
-target_pass= '****'
+target_pass= '123456'
 
 podman_dir = '/tmp/podman/'   # 迁移过程的工作目录，#!在checkpoint之后，整个目录会被同步
 chkpt_path = podman_dir+'srvMig.tar.gz'  # 保存checkpoint的位置
@@ -22,6 +22,9 @@ mount_src_dir = mount_dir+'src/' # 预迁移的目录 #! 在checkpoint之前会�
 
 csv_dir = "/tmp/csv_data/"
 csv_path = csv_dir+"time_stamps_{}.csv"
+
+
+# ====================is_test = True=================================
 
 
 mount_volume = True if test in ['tar', 'video'] else False  # 是否挂载本地目录
@@ -74,14 +77,14 @@ game_chkpt_path = podman_dir+'game.tar.gz'
 
 
 
-ga_cmd = 'sudo xhost +local:root && sudo podman run -it --rm --ipc=host --env="DISPLAY=$DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v /dev/shm:/dev/shm -v /var/run/dbus:/var/run/dbus  --device /dev/dri/card0 --device /dev/snd:/dev/snd -v /tmp/podman/test:/tmp/podman  -p 8554:8554 -p 8555:8555  parkhi/gaminganywhere:16.04 bash /tmp/podman/src/run_ga.sh'
+ga_cmd = 'sudo xhost +local:root && sudo podman run -d --rm --ipc=host --env="DISPLAY=$DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v /dev/shm:/dev/shm -v /var/run/dbus:/var/run/dbus  --device /dev/dri/card0 --device /dev/snd:/dev/snd -v /tmp/podman/test:/tmp/podman  -p 8554:8554 -p 8555:8555  parkhi/gaminganywhere:16.04 bash /tmp/podman/src/run_ga.sh'
 
 
 # game运行需要的Python代码和jar包都放到  mount_src_dir 里面
 
-game_base_cmd = 'xhost +local:root && podman run -it --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v /tmp/podman/test:/tmp/podman '
+game_base_cmd = 'xhost +local:root && podman run -d --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v /tmp/podman/test:/tmp/podman '
 
-snake_cmd = 'docker.io/zzdflyz351/snake-edge python /tmp/podman/src/Snakepygame.py -n snake -i 10.112.145.90 -p 5500'
+snake_cmd = 'docker.io/zzdflyz351/snake-edge \"python /tmp/podman/src/Snakepygame.py -n snake -i 10.112.145.90 -p 5500\"'
 
 minecraft_cmd = 'docker.io/platpus/javafx java -jar /tmp/podman/src/HMCL-3.3.188.jar'
 
