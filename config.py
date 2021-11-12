@@ -82,7 +82,7 @@ ga_cmd = 'sudo xhost +local:root && sudo podman run -d --rm --ipc=host --env="DI
 
 # game运行需要的Python代码和jar包都放到  mount_src_dir 里面
 
-game_base_cmd = 'xhost +local:root && podman run -d --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v /tmp/podman/test:/tmp/podman '
+game_base_cmd = 'sudo xhost +local:root && sudo podman run -d --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v /tmp/podman/test:/tmp/podman '
 
 snake_cmd = 'docker.io/zzdflyz351/snake-edge \"python /tmp/podman/src/Snakepygame.py -n snake -i 10.112.145.90 -p 5500\"'
 
