@@ -50,7 +50,7 @@ def run_container():
 
 def checkpoint(i):
 
-    cmd = f"sudo podman container checkpoint {CACHE['id']} -e {config.chkpt_path}"
+    cmd = f"sudo podman container checkpoint --tcp-established {CACHE['id']} -e {config.chkpt_path}"
 
     # print(f'COMMAND:  {cmd}')
     ans, t = cmd_run(cmd, True)
