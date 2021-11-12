@@ -54,7 +54,7 @@ test_cmds = {
     },
     'snake':{
         'image':'docker.io/zzdflyz351/snake-edge',
-        'init_cmd': '\"python /tmp/podman/src/Snakepygame.py -n snake -i 10.112.145.90 -p 5500\"'
+        'init_cmd': '\"python /tmp/podman/src/Snakepygame.py -n podman -i 10.112.145.90 -p 5500\"'
     },
     'minecraft':{
         'image':'docker.io/platpus/javafx',

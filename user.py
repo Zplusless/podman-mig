@@ -10,7 +10,7 @@ from call_cmd import cmd_run
 
 
 @app.route('/connect/', methods=['POST'])
-def recieve_data():
+def connect():
 
 
     ip = request.form.get('ip')
@@ -22,7 +22,7 @@ def recieve_data():
 
 
 @app.route('/end/', methods=['POST'])
-def recieve_data():
+def end():
 
     cmd = f'bash script/kill_ga_client.sh'
     cmd_run(cmd, True)
