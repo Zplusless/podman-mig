@@ -247,6 +247,12 @@ class SnakeClient(object):
                         self.playerId = args[2]
                     elif cmd == "world":
                         self.initWorld(args[1])
+                        
+                        #* %%%%%%%%%%%%直接join启动%%%%%%%%%%%%%%%
+                        self.btnJoin.setEnabled(True)
+                        await self.send_msg(websocket, ["join"])
+                        #* %%%%%%%%%%%%直接join启动%%%%%%%%%%%%%%%
+                    
                     elif cmd == "reset_world":
                         self.btnJoin.setEnabled(True)  # 如果是False，当多个用户接入但是没有开始，则前面接入的会无法join
                         self.resetWorld()
