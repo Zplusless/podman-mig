@@ -10,7 +10,7 @@ test = 'mem'  # cpu, io, mem, tar, video, snake, minecraft
 
 src_ip = '10.112.150.12'
 dst_ip = '10.112.149.97'
-user_ip = '10.112.147.71'
+user_ip = '10.112.30.143'
 
 
 wait_time= 5         # 运行几秒开始迁移
