@@ -10,20 +10,21 @@ test = 'mem'  # cpu, io, mem, tar, video, snake, minecraft
 
 src_ip = '10.112.150.12'
 dst_ip = '10.112.149.97'
-user_ip = '10.112.30.143'
+user_ip = '10.112.30.143'   #game client/UE 的ip
 
 
 wait_time= 5         # 运行几秒开始迁移
 target_ip= dst_ip
-target_user= 'edge'
+target_user= 'edge'   # destination节点的账户密码，用于rsync传文件
 target_pass= '123456'
 
-podman_dir = '/tmp/podman/'
-chkpt_path = podman_dir+'srvMig.tar.gz'
-mount_dir = podman_dir+'test/'
-mount_src_dir = mount_dir+'src/'
+podman_dir = '/tmp/podman/'  # 实验临时文件的根目录
+chkpt_path = podman_dir+'srvMig.tar.gz'  # checkpoint文件存放地址
+mount_dir = podman_dir+'test/'  # 容器启动挂载的目录
+mount_src_dir = mount_dir+'src/'    # 容器启动后会使用到的源文件的路径，本路径在容器迁移前会先与destination node同步
 
 
+# 记录实验数据的log的路径
 csv_dir = "/tmp/csv_data/"
 csv_path = csv_dir+"time_stamps_{}.csv"
 
