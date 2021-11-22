@@ -11,4 +11,4 @@ This is a project conducting service migration using Podman
 1. 在source node 和destination node分别部署本项目代码
 2. source node上启动src_test_rsync.py 和 run_measure.py
 3. destination node上启动dst_test.py
-4. 
+4. config的配置详见注释
